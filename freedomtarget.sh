@@ -1,7 +1,6 @@
 #!/bin/sh
 
-echo "Enter the Query: "  
-read payload  
+QUERY=sys.argv[1]
 
 for QUERY in $(echo $payload);do mkdir ${QUERY%} > /dev/2 null>&1 ./${QUERY%}/${QUERY%}-VULN > /dev/null 2>&1;
 curl -s "https://beta.shodan.io/search/facet?query=$QUERY&facet=ip" | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}' > ./${QUERY%}/${QUERY%}-ip-$(date +%Y-%m-%d).txt;
