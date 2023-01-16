@@ -1,0 +1,3 @@
+echo grafana | while read QUERY;do curl -s "https://beta.shodan.io/search/facet?query=$QUERY&facet=port" | grep -Eo '<strong>[0-9]{1,4}' | tr -d "<strong>" | sed 's/$/, /g' | xargs echo | sed 's/,$//g' | tr -d " "  | anew /tmp/port.txt;
+curl -s "https://beta.shodan.io/search/facet?query=$QUERY&facet=ip" | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}' | anew /tmp/ip.txt;done &&
+for i in $(cat /tmp/port.txt);do cat /tmp/ip.txt  | httpx -silent -ports "$i" -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0" -mc 200 -sc -title -fs mercu -fr ;done
